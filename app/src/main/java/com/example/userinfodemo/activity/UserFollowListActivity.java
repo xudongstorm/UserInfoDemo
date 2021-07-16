@@ -10,7 +10,7 @@ import com.example.userinfodemo.R;
 import com.example.userinfodemo.adapter.UserFollowListAdapter;
 import com.example.userinfodemo.base.BaseActivity;
 import com.example.userinfodemo.contract.IUserFollowListContract;
-import com.example.userinfodemo.model.UserFollowInfo;
+import com.example.userinfodemo.bean.UserFollowInfo;
 import com.example.userinfodemo.presenter.UserFollowListPresenter;
 
 import java.util.ArrayList;

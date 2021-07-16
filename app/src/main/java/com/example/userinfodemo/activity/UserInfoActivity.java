@@ -13,7 +13,8 @@ import com.example.userinfodemo.common.Constants;
 import com.example.userinfodemo.R;
 import com.example.userinfodemo.base.BaseActivity;
 import com.example.userinfodemo.contract.IUserInfoContract;
-import com.example.userinfodemo.model.UserInfo;
+import com.example.userinfodemo.bean.UserInfo;
+import com.example.userinfodemo.db.UserInfoDbManager;
 import com.example.userinfodemo.presenter.UserInfoPresenter;
 
 public class UserInfoActivity extends BaseActivity<UserInfoPresenter> implements IUserInfoContract.IUserInfoView, View.OnClickListener {
@@ -51,6 +52,7 @@ public class UserInfoActivity extends BaseActivity<UserInfoPresenter> implements
 
     @Override
     protected void initData() {
+        UserInfoDbManager.getInstance().createTable(this);      //数据库建表
         mLoginName = getIntent().getStringExtra(INTENT_KEY_LOGINNAME);
         mLoginName = TextUtils.isEmpty(mLoginName) ? Constants.DEFAULT_LOGIN_NAME : mLoginName;
         mPresenter.getUserInfo(mLoginName);
@@ -76,7 +78,7 @@ public class UserInfoActivity extends BaseActivity<UserInfoPresenter> implements
         if(userInfo != null){
             mUserInfo = userInfo;
             Glide.with(this).load(userInfo.getAvatar_url()).into(mIvAvatar);
-            mTvName.setText(userInfo.getName());
+            mTvName.setText(userInfo.getLogin());
             mTvFollowing.setText(String.format(getResources().getString(R.string.user_info_followeing_msg), String.valueOf(userInfo.getFollowing())));
             mTvFollowers.setText(String.format(getResources().getString(R.string.user_info_followers_msg), String.valueOf(userInfo.getFollowers())));
         }

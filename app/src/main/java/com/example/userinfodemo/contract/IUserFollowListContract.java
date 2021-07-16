@@ -1,11 +1,8 @@
 package com.example.userinfodemo.contract;
 
-import com.example.userinfodemo.model.UserFollowInfo;
+import com.example.userinfodemo.bean.UserFollowInfo;
 
 import java.util.List;
-
-import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 public interface IUserFollowListContract {
 
@@ -17,9 +14,9 @@ public interface IUserFollowListContract {
 
     interface IUserFollowListPresenter{
 
-        void queryUserFollowingInfo(String userName, int page, int perPage);
-
         void queryUserFollowersInfo(String userName, int page, int perPage);
+
+        void queryUserFollowingInfo(String userName, int page, int perPage);
 
     }
 }

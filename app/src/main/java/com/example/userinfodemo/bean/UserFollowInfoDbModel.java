@@ -1,10 +1,10 @@
-package com.example.userinfodemo.model;
+package com.example.userinfodemo.bean;
 
 public class UserFollowInfoDbModel {
 
     private String login;
-    private String followers;
-    private String following;
+    private String followers;   //存储对应followers的json字符串，以“、”分割，如{"login" : "dong", "avatarUrl" : "xxx}
+    private String following;   //存储对应following的json字符串，以“、”分割，如{"login" : "dong", "avatarUrl" : "xxx}
 
 
     public String getLogin() {

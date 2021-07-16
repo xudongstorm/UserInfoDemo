@@ -1,4 +1,4 @@
-package com.example.userinfodemo.model;
+package com.example.userinfodemo.bean;
 
 public class UserInfoDbModel {
 

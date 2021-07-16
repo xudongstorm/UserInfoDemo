@@ -4,16 +4,17 @@ package com.example.userinfodemo.presenter;
 import android.text.TextUtils;
 
 import com.example.userinfodemo.base.BasePresenter;
-import com.example.userinfodemo.common.RxTransformUtils;
 import com.example.userinfodemo.contract.IUserInfoContract;
-import com.example.userinfodemo.model.UserInfo;
-import com.example.userinfodemo.net.RetrofitManager;
-import com.example.userinfodemo.net.UsersService;
+import com.example.userinfodemo.db.UserInfoDbManager;
+import com.example.userinfodemo.bean.UserInfo;
 import com.example.userinfodemo.activity.UserInfoActivity;
+import com.example.userinfodemo.net.UserInfoNet;
 
 import org.jetbrains.annotations.NotNull;
 
+import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 public class UserInfoPresenter extends BasePresenter<UserInfoActivity> implements IUserInfoContract.IUserInfoPresenter {
@@ -27,12 +28,12 @@ public class UserInfoPresenter extends BasePresenter<UserInfoActivity> implement
         if(TextUtils.isEmpty(userName)){
             return;
         }
-        RetrofitManager.getInstance().createUsersService().getUserInfo(userName)
-                .compose(RxTransformUtils.schedule())
+        Observable.concat(UserInfoDbManager.getInstance().queryUserInfoByLogin(userName),
+                UserInfoNet.getInstance().queryUserInfo(userName))
+                .observeOn(AndroidSchedulers.mainThread(), true)
                 .subscribe(new Observer<UserInfo>() {
                     @Override
                     public void onSubscribe(@NotNull Disposable d) {
-
                     }
 
                     @Override
@@ -42,7 +43,6 @@ public class UserInfoPresenter extends BasePresenter<UserInfoActivity> implement
 
                     @Override
                     public void onError(@NotNull Throwable e) {
-
                     }
 
                     @Override

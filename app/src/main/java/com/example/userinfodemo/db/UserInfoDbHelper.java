@@ -23,13 +23,13 @@ public class UserInfoDbHelper extends SQLiteOpenHelper {
     public static final String USER_FOLLOW_INFO_COLUMN_FOLLOWING = "following";
 
     private static final String CREATE_USER_INFO_TABLE = "create table if not exists " + USER_INFO_TABLE_NAME +
-            " (id integer primary key, login text not null, avatarUrl text, followers integer, following integer)";
+            " (id integer primary key autoincrement, login text not null UNIQUE, avatarUrl text, followers integer, following integer)";
 
     private static final String CREATE_USER_FOLLOW_INFO_TABLE = "create table if not exists " + USER_FOLLOW_INFO_TABLE_NAME +
-            " (id integer primary key, login text  not null, followers text, following text)";
+            " (id integer primary key autoincrement, login text  not null UNIQUE, followers text, following text)";
 
-    public UserInfoDbHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+    public UserInfoDbHelper(@Nullable Context context) {
+        super(context, DB_NAME, null, DB_VERSION);
     }
 
     @Override

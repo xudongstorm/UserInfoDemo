@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.userinfodemo.R;
 import com.example.userinfodemo.activity.UserInfoActivity;
-import com.example.userinfodemo.model.UserFollowInfo;
+import com.example.userinfodemo.bean.UserFollowInfo;
 
 import org.jetbrains.annotations.NotNull;
 

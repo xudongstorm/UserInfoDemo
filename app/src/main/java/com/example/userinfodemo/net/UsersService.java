@@ -1,7 +1,7 @@
 package com.example.userinfodemo.net;
 
-import com.example.userinfodemo.model.UserFollowInfo;
-import com.example.userinfodemo.model.UserInfo;
+import com.example.userinfodemo.bean.UserFollowInfo;
+import com.example.userinfodemo.bean.UserInfo;
 
 import java.util.List;
 
