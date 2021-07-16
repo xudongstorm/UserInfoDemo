@@ -57,6 +57,7 @@ public class UserInfoNet {
                 .map(new Function<List<UserFollowInfo>, List<UserFollowInfo>>() {
                     @Override
                     public List<UserFollowInfo> apply(@NotNull List<UserFollowInfo> userFollowInfos) throws Exception {
+                        UserFollowInfoDbModel userFollowInfoDbModel = UserInfoDbManager.getInstance().queryUserFollowInfoByLogin(userName);
                         UserFollowInfoDbModel model = new UserFollowInfoDbModel();
                         model.setLogin(userName);
                         StringBuilder sb = new StringBuilder();
@@ -69,7 +70,12 @@ public class UserInfoNet {
                         }
                         sb.deleteCharAt(sb.length() - 1);
                         model.setFollowing(sb.toString());
-                        UserInfoDbManager.getInstance().insertUserFollowInfo(model);
+                        if(userFollowInfoDbModel != null){
+                            model.setFollowers(userFollowInfoDbModel.getFollowers());
+                            UserInfoDbManager.getInstance().updateUserFollowInfo(model);
+                        }else{
+                            UserInfoDbManager.getInstance().insertUserFollowInfo(model);
+                        }
                         return userFollowInfos;
                     }
                 })
@@ -81,6 +87,7 @@ public class UserInfoNet {
                 .map(new Function<List<UserFollowInfo>, List<UserFollowInfo>>() {
                     @Override
                     public List<UserFollowInfo> apply(@NotNull List<UserFollowInfo> userFollowInfos) throws Exception {
+                        UserFollowInfoDbModel userFollowInfoDbModel = UserInfoDbManager.getInstance().queryUserFollowInfoByLogin(userName);
                         UserFollowInfoDbModel model = new UserFollowInfoDbModel();
                         model.setLogin(userName);
                         StringBuilder sb = new StringBuilder();
@@ -93,7 +100,12 @@ public class UserInfoNet {
                         }
                         sb.deleteCharAt(sb.length() - 1);
                         model.setFollowers(sb.toString());
-                        UserInfoDbManager.getInstance().insertUserFollowInfo(model);
+                        if(userFollowInfoDbModel != null){
+                            model.setFollowing(userFollowInfoDbModel.getFollowing());
+                            UserInfoDbManager.getInstance().updateUserFollowInfo(model);
+                        }else{
+                            UserInfoDbManager.getInstance().insertUserFollowInfo(model);
+                        }
                         return userFollowInfos;
                     }
                 })

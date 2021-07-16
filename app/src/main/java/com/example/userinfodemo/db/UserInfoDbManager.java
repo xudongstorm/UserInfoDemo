@@ -45,21 +45,61 @@ public class UserInfoDbManager {
         return mInstance;
     }
 
-    public void insertUserInfo(UserInfoDbModel model){
+    public long insertUserInfo(UserInfoDbModel model){
         ContentValues values = new ContentValues();
         values.put(UserInfoDbHelper.USER_INFO_COLUMN_LOGIN, model.getLogin());
         values.put(UserInfoDbHelper.USER_INFO_COLUMN_AVATARURL, model.getAvatarUrl());
         values.put(UserInfoDbHelper.USER_INFO_COLUMN_FOLLOWERS, model.getFollowers());
         values.put(UserInfoDbHelper.USER_INFO_COLUMN_FOLLOWING, model.getFollowing());
-        mDb.insert(UserInfoDbHelper.USER_INFO_TABLE_NAME, null, values);
+        return mDb.insert(UserInfoDbHelper.USER_INFO_TABLE_NAME, null, values);
     }
 
-    public void insertUserFollowInfo(UserFollowInfoDbModel model){
+    public long insertUserFollowInfo(UserFollowInfoDbModel model){
         ContentValues values = new ContentValues();
         values.put(UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_LOGIN, model.getLogin());
         values.put(UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_FOLLOWERS, model.getFollowers());
         values.put(UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_FOLLOWING, model.getFollowing());
-        mDb.insert(UserInfoDbHelper.USER_FOLLOW_INFO_TABLE_NAME, null, values);
+        return mDb.insert(UserInfoDbHelper.USER_FOLLOW_INFO_TABLE_NAME, null, values);
+    }
+
+    public long updateUserInfo(UserInfoDbModel model){
+        ContentValues values = new ContentValues();
+        values.put(UserInfoDbHelper.USER_INFO_COLUMN_AVATARURL, model.getAvatarUrl());
+        values.put(UserInfoDbHelper.USER_INFO_COLUMN_FOLLOWERS, model.getFollowers());
+        values.put(UserInfoDbHelper.USER_INFO_COLUMN_FOLLOWING, model.getFollowing());
+        return mDb.update(UserInfoDbHelper.USER_INFO_TABLE_NAME, values, UserInfoDbHelper.USER_INFO_COLUMN_LOGIN + " = ? ", new String[]{model.getLogin()});
+    }
+
+    public long updateUserFollowInfo(UserFollowInfoDbModel model){
+        ContentValues values = new ContentValues();
+        values.put(UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_FOLLOWERS, model.getFollowers());
+        values.put(UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_FOLLOWING, model.getFollowing());
+        return mDb.update(UserInfoDbHelper.USER_FOLLOW_INFO_TABLE_NAME, values, UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_LOGIN + " = ? ", new String[]{model.getLogin()});
+    }
+
+    public UserFollowInfoDbModel queryUserFollowInfoByLogin(String login){
+        if(TextUtils.isEmpty(login)){
+            return null;
+        }
+        Cursor cursor = null;
+        try {
+            cursor = mDb.query(UserInfoDbHelper.USER_FOLLOW_INFO_TABLE_NAME, null, UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_LOGIN + " = ?", new String[]{login}, null, null, null);
+            if(cursor != null && cursor.moveToFirst()){
+                String followers = cursor.getString(cursor.getColumnIndex(UserInfoDbHelper.USER_INFO_COLUMN_FOLLOWERS));
+                String following = cursor.getString(cursor.getColumnIndex(UserInfoDbHelper.USER_INFO_COLUMN_FOLLOWING));
+                UserFollowInfoDbModel model = new UserFollowInfoDbModel();
+                model.setLogin(login);
+                model.setFollowers(followers);
+                model.setFollowing(following);
+                return model;
+            }
+        }catch (Exception e){
+        }finally {
+            if(cursor != null){
+                cursor.close();
+            }
+        }
+        return null;
     }
 
     public Observable<UserInfo> queryUserInfoByLogin(String login){
