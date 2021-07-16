@@ -1,11 +1,11 @@
 package com.example.userinfodemo.db;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
+import com.example.userinfodemo.MyApplication;
 import com.example.userinfodemo.bean.UserFollowInfo;
 import com.example.userinfodemo.bean.UserFollowInfoDbModel;
 import com.example.userinfodemo.bean.UserFollowPersonInfo;
@@ -30,8 +30,8 @@ public class UserInfoDbManager {
     private SQLiteDatabase mDb;
 
     private UserInfoDbManager(){
-        /*mDbHelper = new UserInfoDbHelper(MyApplication.getAppContext());
-        mDb = mDbHelper.getWritableDatabase();*/
+        mDbHelper = new UserInfoDbHelper(MyApplication.getAppContext());
+        mDb = mDbHelper.getWritableDatabase();
     }
 
     public static UserInfoDbManager getInstance(){
@@ -43,11 +43,6 @@ public class UserInfoDbManager {
             }
         }
         return mInstance;
-    }
-
-    public void createTable(Context context){
-        mDbHelper = new UserInfoDbHelper(context.getApplicationContext());
-        mDb = mDbHelper.getWritableDatabase();
     }
 
     public void insertUserInfo(UserInfoDbModel model){

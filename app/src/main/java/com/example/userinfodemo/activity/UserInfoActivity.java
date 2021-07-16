@@ -52,7 +52,6 @@ public class UserInfoActivity extends BaseActivity<UserInfoPresenter> implements
 
     @Override
     protected void initData() {
-        UserInfoDbManager.getInstance().createTable(this);      //数据库建表
         mLoginName = getIntent().getStringExtra(INTENT_KEY_LOGINNAME);
         mLoginName = TextUtils.isEmpty(mLoginName) ? Constants.DEFAULT_LOGIN_NAME : mLoginName;
         mPresenter.getUserInfo(mLoginName);
