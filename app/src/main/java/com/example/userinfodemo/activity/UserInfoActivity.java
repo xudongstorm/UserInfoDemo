@@ -14,7 +14,6 @@ import com.example.userinfodemo.R;
 import com.example.userinfodemo.base.BaseActivity;
 import com.example.userinfodemo.contract.IUserInfoContract;
 import com.example.userinfodemo.bean.UserInfo;
-import com.example.userinfodemo.db.UserInfoDbManager;
 import com.example.userinfodemo.presenter.UserInfoPresenter;
 
 public class UserInfoActivity extends BaseActivity<UserInfoPresenter> implements IUserInfoContract.IUserInfoView, View.OnClickListener {
@@ -26,11 +25,12 @@ public class UserInfoActivity extends BaseActivity<UserInfoPresenter> implements
     private UserInfo mUserInfo;
 
     private static final String INTENT_KEY_LOGINNAME = "loginName";
-    private String mLoginName;
+    private static final String INTENT_KEY_AVATAR_URL = "avatarUrl";
 
-    public static void start(Context context, String loginName){
+    public static void start(Context context, String loginName, String avatarUrl){
         Intent intent = new Intent(context, UserInfoActivity.class);
         intent.putExtra(INTENT_KEY_LOGINNAME, loginName);
+        intent.putExtra(INTENT_KEY_AVATAR_URL, avatarUrl);
         context.startActivity(intent);
     }
 
@@ -52,9 +52,14 @@ public class UserInfoActivity extends BaseActivity<UserInfoPresenter> implements
 
     @Override
     protected void initData() {
-        mLoginName = getIntent().getStringExtra(INTENT_KEY_LOGINNAME);
-        mLoginName = TextUtils.isEmpty(mLoginName) ? Constants.DEFAULT_LOGIN_NAME : mLoginName;
-        mPresenter.getUserInfo(mLoginName);
+        String loginName = getIntent().getStringExtra(INTENT_KEY_LOGINNAME);
+        String avatarUrl = getIntent().getStringExtra(INTENT_KEY_AVATAR_URL);
+        loginName = TextUtils.isEmpty(loginName) ? Constants.DEFAULT_LOGIN_NAME : loginName;
+        mTvName.setText(loginName);
+        if(!TextUtils.isEmpty(avatarUrl)){
+            Glide.with(this).load(avatarUrl).into(mIvAvatar);
+        }
+        mPresenter.getUserInfo(loginName);
     }
 
     @Override

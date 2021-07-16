@@ -66,7 +66,7 @@ public class UserFollowListAdapter extends RecyclerView.Adapter<UserFollowListAd
             ivAvatar = itemView.findViewById(R.id.iv_avatar);
             tvName = itemView.findViewById(R.id.tv_name);
 
-            itemView.setOnClickListener(v -> UserInfoActivity.start(mContext, tvName.getText().toString()));
+            itemView.setOnClickListener(v -> UserInfoActivity.start(mContext, tvName.getText().toString(), userFollowInfo.getAvatar_url()));
         }
 
         public void setData(UserFollowInfo userFollowInfo){
