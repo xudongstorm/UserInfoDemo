@@ -3,4 +3,5 @@
 
     <string name="user_info_followers_msg">followers : %s</string>
     <string name="user_info_followeing_msg">followeing : %s</string>
+    <string name="loading">"加载中&#8230;"</string>
 </resources>

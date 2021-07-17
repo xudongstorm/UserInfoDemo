@@ -11,5 +11,6 @@
     <color name="user_text_color">#000000</color>
     <color name="follow_text_color">#80858A</color>
     <color name="color_divider_line">#E9ECF0</color>
+    <color name="color_loading_text">#80858A</color>
 
 </resources>

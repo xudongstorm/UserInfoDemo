@@ -19,10 +19,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class UserFollowListAdapter extends RecyclerView.Adapter<UserFollowListAdapter.UserFollowListViewHolder> {
+public class UserFollowListAdapter extends RecyclerView.Adapter<UserFollowListAdapter.BaseViewHolder> {
 
     private Context mContext;
     private List<UserFollowInfo> mData;
+
+    private static final int TYPE_FOOT_VIEW = 1000;
+    private boolean canLoadMore;      //是否可以上拉加载
 
     public UserFollowListAdapter(Context context, List<UserFollowInfo> data){
         mContext = context;
@@ -40,22 +43,61 @@ public class UserFollowListAdapter extends RecyclerView.Adapter<UserFollowListAd
     @NonNull
     @NotNull
     @Override
-    public UserFollowListViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user_follow_list, parent, false);
-        return new UserFollowListViewHolder(view);
+    public BaseViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+        View view = null;
+        if(viewType == TYPE_FOOT_VIEW){
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_loading, parent, false);
+            return new UserFollowListAdapter.FootViewHolder(view);
+        }else {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user_follow_list, parent, false);
+            return new UserFollowListViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull @NotNull UserFollowListViewHolder holder, int position) {
-        holder.setData(mData.get(position));
+    public void onBindViewHolder(@NonNull @NotNull BaseViewHolder holder, int position) {
+        if(holder instanceof UserFollowListViewHolder){
+            ((UserFollowListViewHolder) holder).setData(mData.get(position));
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mData.size() + (canLoadMore ? 1 : 0);
     }
 
-    class UserFollowListViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public int getItemViewType(int position) {
+        if(canLoadMore){
+            if(position == mData.size()){
+                return TYPE_FOOT_VIEW;
+            }
+            return super.getItemViewType(position);
+        }
+        return super.getItemViewType(position);
+    }
+
+    public boolean isCanLoadMore() {
+        return canLoadMore;
+    }
+
+    public void setCanLoadMore(boolean canLoadMore) {
+        this.canLoadMore = canLoadMore;
+    }
+
+    class BaseViewHolder extends RecyclerView.ViewHolder{
+        public BaseViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    class FootViewHolder extends BaseViewHolder {
+        public FootViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    class UserFollowListViewHolder extends BaseViewHolder {
 
         AppCompatImageView ivAvatar;
         TextView tvName;

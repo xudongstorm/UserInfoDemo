@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.userinfodemo.R;
 import com.example.userinfodemo.adapter.UserFollowListAdapter;
 import com.example.userinfodemo.base.BaseActivity;
+import com.example.userinfodemo.common.Constants;
 import com.example.userinfodemo.contract.IUserFollowListContract;
 import com.example.userinfodemo.bean.UserFollowInfo;
 import com.example.userinfodemo.presenter.UserFollowListPresenter;
@@ -55,9 +56,9 @@ public class UserFollowListActivity extends BaseActivity<UserFollowListPresenter
         mLoginName = getIntent().getStringExtra(INTENT_KEY_LOGIN);
         isFollowers = getIntent().getBooleanExtra(INTENT_KEY_ISFOLLOWERS, true);
         if(isFollowers){
-            mPresenter.queryUserFollowersInfo(mLoginName, 1, 30);
+            mPresenter.queryUserFollowersInfo(mLoginName, mList.size() / Constants.USER_INFO_PAGE_SIZE + 1, Constants.USER_INFO_PAGE_SIZE);
         }else{
-            mPresenter.queryUserFollowingInfo(mLoginName, 1, 30);
+            mPresenter.queryUserFollowingInfo(mLoginName, mList.size() / Constants.USER_INFO_PAGE_SIZE + 1, Constants.USER_INFO_PAGE_SIZE);
         }
     }
 
@@ -78,7 +79,7 @@ public class UserFollowListActivity extends BaseActivity<UserFollowListPresenter
 
     @Override
     public void updateData(List<UserFollowInfo> list) {
-        mList = list;
+        mList.addAll(list);
         mAdapter.updateDataAndRefresh(mList);
     }
 }
