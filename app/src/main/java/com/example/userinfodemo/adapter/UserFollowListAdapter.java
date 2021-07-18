@@ -27,19 +27,11 @@ public class UserFollowListAdapter extends RecyclerView.Adapter<UserFollowListAd
     private List<UserFollowInfo> mData;
 
     private static final int TYPE_FOOT_VIEW = 1000;
-    private boolean canLoadMore;      //是否可以上拉加载
+    private boolean canLoadMore;      //是否可以上拉加载，若未加载完且滑动到最后一项时可上拉加载
 
     public UserFollowListAdapter(Context context, List<UserFollowInfo> data){
         mContext = context;
         mData = data;
-    }
-
-    public void updateDataAndRefresh(List<UserFollowInfo> datas) {
-        int previousSize = mData.size();
-        mData.clear();
-        notifyItemRangeRemoved(0, previousSize);
-        mData.addAll(datas);
-        notifyDataSetChanged();
     }
 
     @NonNull
@@ -117,7 +109,11 @@ public class UserFollowListAdapter extends RecyclerView.Adapter<UserFollowListAd
         public void setData(UserFollowInfo userFollowInfo){
             if(userFollowInfo != null){
                 this.userFollowInfo = userFollowInfo;
-                Glide.with(mContext).asBitmap().load(userFollowInfo.getAvatar_url()).apply(RequestOptions.bitmapTransform(new CircleCrop())).placeholder(R.drawable.personal_default_avatar).error(R.drawable.personal_default_avatar).into(ivAvatar);
+                Glide.with(mContext).asBitmap().load(userFollowInfo.getAvatar_url())
+                        .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                        .placeholder(R.drawable.personal_default_avatar)
+                        .error(R.drawable.personal_default_avatar)
+                        .into(ivAvatar);
                 tvName.setText(userFollowInfo.getLogin());
             }
         }

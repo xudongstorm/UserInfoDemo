@@ -43,7 +43,7 @@ public class UserInfoNet {
                 .map(new Function<UserInfo, UserInfo>() {
                     @Override
                     public UserInfo apply(@NotNull UserInfo userInfo) throws Exception {
-                        //网络请求返回，先插入数据库
+                        //网络请求返回，先插入或更新数据库
                         UserInfoDbModel userInfoDbModel = UserInfoDbManager.getInstance().queryUserInfoByLoginSync(userName);
                         UserInfoDbModel model = new UserInfoDbModel();
                         model.setLogin(userInfo.getLogin());
@@ -66,7 +66,7 @@ public class UserInfoNet {
                 .map(new Function<List<UserFollowInfo>, List<UserFollowInfo>>() {
                     @Override
                     public List<UserFollowInfo> apply(@NotNull List<UserFollowInfo> userFollowInfos) throws Exception {
-                        //网络请求返回，先插入数据库
+                        //网络请求返回，先插入或更新数据库
                         UserFollowInfoDbModel userFollowInfoDbModel = UserInfoDbManager.getInstance().queryUserFollowInfoByLogin(userName);
                         UserFollowInfoDbModel model = new UserFollowInfoDbModel();
                         model.setLogin(userName);
@@ -97,7 +97,7 @@ public class UserInfoNet {
                 .map(new Function<List<UserFollowInfo>, List<UserFollowInfo>>() {
                     @Override
                     public List<UserFollowInfo> apply(@NotNull List<UserFollowInfo> userFollowInfos) throws Exception {
-                        //网络请求返回，先插入数据库
+                        //网络请求返回，先插入或更新数据库
                         UserFollowInfoDbModel userFollowInfoDbModel = UserInfoDbManager.getInstance().queryUserFollowInfoByLogin(userName);
                         UserFollowInfoDbModel model = new UserFollowInfoDbModel();
                         model.setLogin(userName);

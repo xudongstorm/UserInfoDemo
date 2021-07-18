@@ -1,5 +1,8 @@
 package com.example.userinfodemo.bean;
 
+/**
+ * 用户Follow网络实体类
+ */
 public class UserFollowInfo {
 
     private String login;

@@ -1,5 +1,8 @@
 package com.example.userinfodemo.bean;
 
+/**
+ * 用户个人信息DB实体类
+ */
 public class UserInfoDbModel {
 
     private String login;

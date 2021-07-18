@@ -59,7 +59,11 @@ public class UserInfoActivity extends BaseActivity<UserInfoPresenter> implements
         loginName = TextUtils.isEmpty(loginName) ? Constants.DEFAULT_LOGIN_NAME : loginName;
         mTvName.setText(loginName);
         if(!TextUtils.isEmpty(avatarUrl)){
-            Glide.with(this).asBitmap().load(avatarUrl).apply(RequestOptions.bitmapTransform(new CircleCrop())).placeholder(R.drawable.personal_default_avatar).error(R.drawable.personal_default_avatar).into(mIvAvatar);
+            Glide.with(this).asBitmap().load(avatarUrl)
+                    .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                    .placeholder(R.drawable.personal_default_avatar)
+                    .error(R.drawable.personal_default_avatar)
+                    .into(mIvAvatar);
         }
         mPresenter.getUserInfo(loginName);
     }
@@ -83,7 +87,11 @@ public class UserInfoActivity extends BaseActivity<UserInfoPresenter> implements
     public void updateData(UserInfo userInfo) {
         if(userInfo != null){
             mUserInfo = userInfo;
-            Glide.with(this).asBitmap().load(userInfo.getAvatar_url()).apply(RequestOptions.bitmapTransform(new CircleCrop())).placeholder(R.drawable.personal_default_avatar).error(R.drawable.personal_default_avatar).into(mIvAvatar);
+            Glide.with(this).asBitmap().load(userInfo.getAvatar_url())
+                    .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                    .placeholder(R.drawable.personal_default_avatar)
+                    .error(R.drawable.personal_default_avatar)
+                    .into(mIvAvatar);
             mTvName.setText(userInfo.getLogin());
             mTvFollowing.setText(String.format(getResources().getString(R.string.user_info_followeing_msg), String.valueOf(userInfo.getFollowing())));
             mTvFollowers.setText(String.format(getResources().getString(R.string.user_info_followers_msg), String.valueOf(userInfo.getFollowers())));

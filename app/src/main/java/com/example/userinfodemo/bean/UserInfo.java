@@ -1,5 +1,8 @@
 package com.example.userinfodemo.bean;
 
+/**
+ * 用户个人信息网络实体类
+ */
 public class UserInfo {
 
     private String login;

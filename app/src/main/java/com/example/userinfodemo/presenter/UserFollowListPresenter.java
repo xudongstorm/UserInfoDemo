@@ -46,7 +46,7 @@ public class UserFollowListPresenter extends BasePresenter<UserFollowListActivit
 
                             @Override
                             public void onError(@NotNull Throwable e) {
-
+                                Log.e(TAG, "queryUserFollowersInfo onError: " + e.getMessage());
                             }
 
                             @Override
@@ -76,7 +76,7 @@ public class UserFollowListPresenter extends BasePresenter<UserFollowListActivit
 
                             @Override
                             public void onError(@NotNull Throwable e) {
-
+                                Log.e(TAG, "queryUserFollowingInfo onError: " + e.getMessage());
                             }
 
                             @Override

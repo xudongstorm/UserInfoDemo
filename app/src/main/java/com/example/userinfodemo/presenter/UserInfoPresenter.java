@@ -2,6 +2,7 @@ package com.example.userinfodemo.presenter;
 
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.userinfodemo.base.BasePresenter;
 import com.example.userinfodemo.contract.IUserInfoContract;
@@ -17,6 +18,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 
 public class UserInfoPresenter extends BasePresenter<UserInfoActivity> implements IUserInfoContract.IUserInfoPresenter {
+
+    private static final String TAG = UserInfoPresenter.class.getSimpleName();
 
     @Override
     public void start() {
@@ -40,7 +43,7 @@ public class UserInfoPresenter extends BasePresenter<UserInfoActivity> implement
 
                             @Override
                             public void onError(@NotNull Throwable e) {
-
+                                Log.e(TAG, "getUserInfo onError: " + e.getMessage());
                             }
 
                             @Override

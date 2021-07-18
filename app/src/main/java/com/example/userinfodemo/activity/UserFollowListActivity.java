@@ -33,7 +33,7 @@ public class UserFollowListActivity extends BaseActivity<UserFollowListPresenter
     private LinearLayoutManager mManager;
     private List<UserFollowInfo> mList;
     private String mLoginName;
-    private boolean isFollowers;
+    private boolean isFollowers;    //表示是Followers列表还是Following列表
 
     private boolean isSlidingUpward;    //是否正在上滑动
     private boolean isLoadFinish;       //是否加载完成
@@ -61,6 +61,8 @@ public class UserFollowListActivity extends BaseActivity<UserFollowListPresenter
         mAdapter = new UserFollowListAdapter(this, mList);
         mRvUserFollow.setLayoutManager(mManager);
         mRvUserFollow.setAdapter(mAdapter);
+        mRvUserFollow.setHasFixedSize(true);
+        mRvUserFollow.setItemViewCacheSize(5);
         mRvUserFollow.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull @NotNull RecyclerView recyclerView, int newState) {
