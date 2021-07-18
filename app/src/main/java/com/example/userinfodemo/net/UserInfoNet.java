@@ -44,12 +44,17 @@ public class UserInfoNet {
                     @Override
                     public UserInfo apply(@NotNull UserInfo userInfo) throws Exception {
                         //网络请求返回，先插入数据库
+                        UserInfoDbModel userInfoDbModel = UserInfoDbManager.getInstance().queryUserInfoByLoginSync(userName);
                         UserInfoDbModel model = new UserInfoDbModel();
                         model.setLogin(userInfo.getLogin());
                         model.setAvatarUrl(userInfo.getAvatar_url());
                         model.setFollowers(userInfo.getFollowers());
                         model.setFollowing(userInfo.getFollowing());
-                        UserInfoDbManager.getInstance().insertUserInfo(model);
+                        if(userInfoDbModel != null){
+                            UserInfoDbManager.getInstance().updateUserInfo(model);
+                        }else{
+                            UserInfoDbManager.getInstance().insertUserInfo(model);
+                        }
                         return userInfo;
                     }
                 })

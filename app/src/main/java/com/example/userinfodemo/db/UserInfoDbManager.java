@@ -107,6 +107,31 @@ public class UserInfoDbManager {
         return ret;
     }
 
+    public UserInfoDbModel queryUserInfoByLoginSync(String login){
+        if(TextUtils.isEmpty(login)){
+            return null;
+        }
+        Cursor cursor = null;
+        try {
+            cursor = mDb.query(UserInfoDbHelper.USER_INFO_TABLE_NAME, null, UserInfoDbHelper.USER_INFO_COLUMN_LOGIN + " = ?", new String[]{login}, null, null, null);
+            if(cursor != null && cursor.moveToFirst()){
+                UserInfoDbModel model = new UserInfoDbModel();
+                model.setLogin(login);
+                model.setAvatarUrl(cursor.getString(cursor.getColumnIndex(UserInfoDbHelper.USER_INFO_COLUMN_AVATARURL)));
+                model.setFollowers(cursor.getInt(cursor.getColumnIndex(UserInfoDbHelper.USER_INFO_COLUMN_FOLLOWERS)));
+                model.setFollowing(cursor.getInt(cursor.getColumnIndex(UserInfoDbHelper.USER_INFO_COLUMN_FOLLOWING)));
+                return model;
+            }
+        }catch (Exception e){
+            Log.e(TAG, "UserFollowInfoDbModel exception: " + e.getMessage());
+        }finally {
+            if(cursor != null){
+                cursor.close();
+            }
+        }
+        return null;
+    }
+
     public UserFollowInfoDbModel queryUserFollowInfoByLogin(String login){
         if(TextUtils.isEmpty(login)){
             return null;
