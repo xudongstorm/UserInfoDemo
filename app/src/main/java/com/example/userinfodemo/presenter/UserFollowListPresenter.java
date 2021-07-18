@@ -34,6 +34,7 @@ public class UserFollowListPresenter extends BasePresenter<UserFollowListActivit
             return;
         }
         Log.d(TAG, "queryUserFollowersInfo: userName - " + userName + ", page - " + page + ", perPage - " + perPage);
+        //采用concat操作符，先读取缓存，再网络请求
         Observable.concat(UserInfoDbManager.getInstance().queryUserFollowInfoByLogin(userName, true, page, perPage),
                 UserInfoNet.getInstance().queryUserFollowersInfo(userName, page, perPage))
                 .observeOn(AndroidSchedulers.mainThread(), true)
@@ -64,6 +65,7 @@ public class UserFollowListPresenter extends BasePresenter<UserFollowListActivit
             return;
         }
         Log.d(TAG, "queryUserFollowingInfo: userName - " + userName + ", page - " + page + ", perPage - " + perPage);
+        //采用concat操作符，先读取缓存，再网络请求
         Observable.concat(UserInfoDbManager.getInstance().queryUserFollowInfoByLogin(userName, false, page, perPage),
                 UserInfoNet.getInstance().queryUserFollowingInfo(userName, page, perPage))
                 .observeOn(AndroidSchedulers.mainThread(), true)

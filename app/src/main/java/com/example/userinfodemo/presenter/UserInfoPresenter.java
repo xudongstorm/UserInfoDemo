@@ -28,6 +28,7 @@ public class UserInfoPresenter extends BasePresenter<UserInfoActivity> implement
         if(TextUtils.isEmpty(userName)){
             return;
         }
+        //采用concat操作符，先读取缓存，再网络请求
         Observable.concat(UserInfoDbManager.getInstance().queryUserInfoByLogin(userName),
                 UserInfoNet.getInstance().queryUserInfo(userName))
                 .observeOn(AndroidSchedulers.mainThread(), true)

@@ -29,8 +29,6 @@ public abstract class BaseActivity<P extends IBaseContract.IPresenter> extends A
 
     protected abstract P initPresenter();
 
- //   protected abstract BaseModule initModule();
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

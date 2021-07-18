@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">UserInfoDemo</string>
+    <string name="app_name">个人中心</string>
 
     <string name="user_info_followers_msg">followers : %s</string>
     <string name="user_info_followeing_msg">followeing : %s</string>

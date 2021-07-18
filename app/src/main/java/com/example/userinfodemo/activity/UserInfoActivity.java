@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.userinfodemo.common.Constants;
 import com.example.userinfodemo.R;
 import com.example.userinfodemo.base.BaseActivity;
@@ -57,7 +59,7 @@ public class UserInfoActivity extends BaseActivity<UserInfoPresenter> implements
         loginName = TextUtils.isEmpty(loginName) ? Constants.DEFAULT_LOGIN_NAME : loginName;
         mTvName.setText(loginName);
         if(!TextUtils.isEmpty(avatarUrl)){
-            Glide.with(this).load(avatarUrl).into(mIvAvatar);
+            Glide.with(this).asBitmap().load(avatarUrl).apply(RequestOptions.bitmapTransform(new CircleCrop())).placeholder(R.drawable.personal_default_avatar).error(R.drawable.personal_default_avatar).into(mIvAvatar);
         }
         mPresenter.getUserInfo(loginName);
     }
@@ -81,7 +83,7 @@ public class UserInfoActivity extends BaseActivity<UserInfoPresenter> implements
     public void updateData(UserInfo userInfo) {
         if(userInfo != null){
             mUserInfo = userInfo;
-            Glide.with(this).load(userInfo.getAvatar_url()).into(mIvAvatar);
+            Glide.with(this).asBitmap().load(userInfo.getAvatar_url()).apply(RequestOptions.bitmapTransform(new CircleCrop())).placeholder(R.drawable.personal_default_avatar).error(R.drawable.personal_default_avatar).into(mIvAvatar);
             mTvName.setText(userInfo.getLogin());
             mTvFollowing.setText(String.format(getResources().getString(R.string.user_info_followeing_msg), String.valueOf(userInfo.getFollowing())));
             mTvFollowers.setText(String.format(getResources().getString(R.string.user_info_followers_msg), String.valueOf(userInfo.getFollowers())));
@@ -91,7 +93,7 @@ public class UserInfoActivity extends BaseActivity<UserInfoPresenter> implements
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if(mUserInfo == null){
+        if(mUserInfo == null){  //避免网络异常时的空指针
             return;
         }
         if(id == R.id.tv_followers){

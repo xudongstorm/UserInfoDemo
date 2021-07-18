@@ -24,6 +24,9 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.schedulers.Schedulers;
 
+/**
+ * 数据库操作类
+ */
 public class UserInfoDbManager {
 
     private static final String TAG = UserInfoDbManager.class.getSimpleName();

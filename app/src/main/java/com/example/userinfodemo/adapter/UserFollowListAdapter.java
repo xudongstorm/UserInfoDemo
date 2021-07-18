@@ -11,6 +11,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.userinfodemo.R;
 import com.example.userinfodemo.activity.UserInfoActivity;
 import com.example.userinfodemo.bean.UserFollowInfo;
@@ -115,7 +117,7 @@ public class UserFollowListAdapter extends RecyclerView.Adapter<UserFollowListAd
         public void setData(UserFollowInfo userFollowInfo){
             if(userFollowInfo != null){
                 this.userFollowInfo = userFollowInfo;
-                Glide.with(mContext).load(userFollowInfo.getAvatar_url()).into(ivAvatar);
+                Glide.with(mContext).asBitmap().load(userFollowInfo.getAvatar_url()).apply(RequestOptions.bitmapTransform(new CircleCrop())).placeholder(R.drawable.personal_default_avatar).error(R.drawable.personal_default_avatar).into(ivAvatar);
                 tvName.setText(userFollowInfo.getLogin());
             }
         }

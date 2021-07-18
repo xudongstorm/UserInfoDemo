@@ -18,6 +18,9 @@ import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
+/**
+ * 网络请求类
+ */
 public class UserInfoNet {
 
     private volatile static UserInfoNet mInstance;
@@ -40,6 +43,7 @@ public class UserInfoNet {
                 .map(new Function<UserInfo, UserInfo>() {
                     @Override
                     public UserInfo apply(@NotNull UserInfo userInfo) throws Exception {
+                        //网络请求返回，先插入数据库
                         UserInfoDbModel model = new UserInfoDbModel();
                         model.setLogin(userInfo.getLogin());
                         model.setAvatarUrl(userInfo.getAvatar_url());
@@ -57,6 +61,7 @@ public class UserInfoNet {
                 .map(new Function<List<UserFollowInfo>, List<UserFollowInfo>>() {
                     @Override
                     public List<UserFollowInfo> apply(@NotNull List<UserFollowInfo> userFollowInfos) throws Exception {
+                        //网络请求返回，先插入数据库
                         UserFollowInfoDbModel userFollowInfoDbModel = UserInfoDbManager.getInstance().queryUserFollowInfoByLogin(userName);
                         UserFollowInfoDbModel model = new UserFollowInfoDbModel();
                         model.setLogin(userName);
@@ -87,6 +92,7 @@ public class UserInfoNet {
                 .map(new Function<List<UserFollowInfo>, List<UserFollowInfo>>() {
                     @Override
                     public List<UserFollowInfo> apply(@NotNull List<UserFollowInfo> userFollowInfos) throws Exception {
+                        //网络请求返回，先插入数据库
                         UserFollowInfoDbModel userFollowInfoDbModel = UserInfoDbManager.getInstance().queryUserFollowInfoByLogin(userName);
                         UserFollowInfoDbModel model = new UserFollowInfoDbModel();
                         model.setLogin(userName);

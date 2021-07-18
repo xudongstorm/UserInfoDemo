@@ -21,6 +21,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 列表页面采用分页加载，默认一页30条，每次拉取一页，先数据后网络拉取
+ */
 public class UserFollowListActivity extends BaseActivity<UserFollowListPresenter> implements IUserFollowListContract.IUserFollowListView {
 
     private static final String TAG = UserFollowListActivity.class.getSimpleName();
@@ -69,7 +72,7 @@ public class UserFollowListActivity extends BaseActivity<UserFollowListPresenter
                             int itemCount = mManager.getItemCount();
                             // 判断是否滑动到了最后一个item，并且是向上滑动
                             if (lastItemPosition == itemCount - 1) {
-                                //加载更多
+                                //加载下一页
                                 onLoadMore();
                             }
                         }
@@ -112,12 +115,6 @@ public class UserFollowListActivity extends BaseActivity<UserFollowListPresenter
     }
 
     @Override
-    public void updateData(List<UserFollowInfo> list) {
-        mList.addAll(list);
-        mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
     public void updateData(List<UserFollowInfo> list, int page, int perPage) {
         Log.d(TAG, "updateData: list.size - " + list.size() + ", page - " + page + ", perPage - " + perPage);
         if(list.isEmpty()){
@@ -126,9 +123,9 @@ public class UserFollowListActivity extends BaseActivity<UserFollowListPresenter
         }if(list.size() < perPage){
             isLoadFinish = true;
         }
-        if(mList.size() == (page - 1) * perPage){
+        if(mList.size() == (page - 1) * perPage){   //数据库加载
             mList.addAll(list);
-        }else{  //网络更新
+        }else{      //网络刷新
             int start = (page - 1) & perPage;
             for(int i=0; i<list.size(); i++){
                 mList.set(start + i, list.get(i));

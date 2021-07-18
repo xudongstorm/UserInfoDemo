@@ -8,8 +8,6 @@ public interface IUserFollowListContract {
 
     interface IUserFollowListView{
 
-        void updateData(List<UserFollowInfo> list);
-
         void updateData(List<UserFollowInfo> list, int page, int perPage);
 
     }
