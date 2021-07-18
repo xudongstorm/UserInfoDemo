@@ -13,9 +13,8 @@ import com.example.userinfodemo.net.UserInfoNet;
 import org.jetbrains.annotations.NotNull;
 
 import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 
 public class UserInfoPresenter extends BasePresenter<UserInfoActivity> implements IUserInfoContract.IUserInfoPresenter {
 
@@ -29,27 +28,26 @@ public class UserInfoPresenter extends BasePresenter<UserInfoActivity> implement
             return;
         }
         //采用concat操作符，先读取缓存，再网络请求
-        Observable.concat(UserInfoDbManager.getInstance().queryUserInfoByLogin(userName),
-                UserInfoNet.getInstance().queryUserInfo(userName))
-                .observeOn(AndroidSchedulers.mainThread(), true)
-                .subscribe(new Observer<UserInfo>() {
-                    @Override
-                    public void onSubscribe(@NotNull Disposable d) {
-                    }
+        mSubscription.add(
+                Observable.concat(UserInfoDbManager.getInstance().queryUserInfoByLogin(userName),
+                        UserInfoNet.getInstance().queryUserInfo(userName))
+                        .observeOn(AndroidSchedulers.mainThread(), true)
+                        .subscribeWith(new DisposableObserver<UserInfo>() {
+                            @Override
+                            public void onNext(@NotNull UserInfo userInfo) {
+                                mView.updateData(userInfo);
+                            }
 
-                    @Override
-                    public void onNext(@NotNull UserInfo userInfo) {
-                        mView.updateData(userInfo);
-                    }
+                            @Override
+                            public void onError(@NotNull Throwable e) {
 
-                    @Override
-                    public void onError(@NotNull Throwable e) {
-                    }
+                            }
 
-                    @Override
-                    public void onComplete() {
+                            @Override
+                            public void onComplete() {
 
-                    }
-                });
+                            }
+                        })
+        );
     }
 }

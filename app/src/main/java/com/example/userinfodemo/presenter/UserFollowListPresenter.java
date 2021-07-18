@@ -15,9 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 
 public class UserFollowListPresenter extends BasePresenter<UserFollowListActivity> implements IUserFollowListContract.IUserFollowListPresenter {
 
@@ -35,28 +34,27 @@ public class UserFollowListPresenter extends BasePresenter<UserFollowListActivit
         }
         Log.d(TAG, "queryUserFollowersInfo: userName - " + userName + ", page - " + page + ", perPage - " + perPage);
         //采用concat操作符，先读取缓存，再网络请求
-        Observable.concat(UserInfoDbManager.getInstance().queryUserFollowInfoByLogin(userName, true, page, perPage),
-                UserInfoNet.getInstance().queryUserFollowersInfo(userName, page, perPage))
-                .observeOn(AndroidSchedulers.mainThread(), true)
-                .subscribe(new Observer<List<UserFollowInfo>>() {
-                    @Override
-                    public void onSubscribe(@NotNull Disposable d) {
-                    }
+        mSubscription.add(
+                Observable.concat(UserInfoDbManager.getInstance().queryUserFollowInfoByLogin(userName, true, page, perPage),
+                        UserInfoNet.getInstance().queryUserFollowersInfo(userName, page, perPage))
+                        .observeOn(AndroidSchedulers.mainThread(), true)
+                        .subscribeWith(new DisposableObserver<List<UserFollowInfo>>() {
+                            @Override
+                            public void onNext(@NotNull List<UserFollowInfo> userFollowInfos) {
+                                mView.updateData(userFollowInfos, page, perPage);
+                            }
 
-                    @Override
-                    public void onNext(@NotNull List<UserFollowInfo> userInfo) {
-                        mView.updateData(userInfo, page, perPage);
-                    }
+                            @Override
+                            public void onError(@NotNull Throwable e) {
 
-                    @Override
-                    public void onError(@NotNull Throwable e) {
-                    }
+                            }
 
-                    @Override
-                    public void onComplete() {
+                            @Override
+                            public void onComplete() {
 
-                    }
-                });
+                            }
+                        })
+        );
     }
 
     @Override
@@ -66,27 +64,26 @@ public class UserFollowListPresenter extends BasePresenter<UserFollowListActivit
         }
         Log.d(TAG, "queryUserFollowingInfo: userName - " + userName + ", page - " + page + ", perPage - " + perPage);
         //采用concat操作符，先读取缓存，再网络请求
-        Observable.concat(UserInfoDbManager.getInstance().queryUserFollowInfoByLogin(userName, false, page, perPage),
-                UserInfoNet.getInstance().queryUserFollowingInfo(userName, page, perPage))
-                .observeOn(AndroidSchedulers.mainThread(), true)
-                .subscribe(new Observer<List<UserFollowInfo>>() {
-                    @Override
-                    public void onSubscribe(@NotNull Disposable d) {
-                    }
+        mSubscription.add(
+                Observable.concat(UserInfoDbManager.getInstance().queryUserFollowInfoByLogin(userName, false, page, perPage),
+                        UserInfoNet.getInstance().queryUserFollowingInfo(userName, page, perPage))
+                        .observeOn(AndroidSchedulers.mainThread(), true)
+                        .subscribeWith(new DisposableObserver<List<UserFollowInfo>>() {
+                            @Override
+                            public void onNext(@NotNull List<UserFollowInfo> userFollowInfos) {
+                                mView.updateData(userFollowInfos, page, perPage);
+                            }
 
-                    @Override
-                    public void onNext(@NotNull List<UserFollowInfo> userInfo) {
-                        mView.updateData(userInfo, page, perPage);
-                    }
+                            @Override
+                            public void onError(@NotNull Throwable e) {
 
-                    @Override
-                    public void onError(@NotNull Throwable e) {
-                    }
+                            }
 
-                    @Override
-                    public void onComplete() {
+                            @Override
+                            public void onComplete() {
 
-                    }
-                });
+                            }
+                        })
+        );
     }
 }
