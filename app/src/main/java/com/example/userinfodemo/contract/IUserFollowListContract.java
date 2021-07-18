@@ -10,6 +10,8 @@ public interface IUserFollowListContract {
 
         void updateData(List<UserFollowInfo> list);
 
+        void updateData(List<UserFollowInfo> list, int page, int perPage);
+
     }
 
     interface IUserFollowListPresenter{

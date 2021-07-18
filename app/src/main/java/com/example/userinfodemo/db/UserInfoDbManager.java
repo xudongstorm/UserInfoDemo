@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.userinfodemo.MyApplication;
 import com.example.userinfodemo.bean.UserFollowInfo;
@@ -24,6 +25,8 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.schedulers.Schedulers;
 
 public class UserInfoDbManager {
+
+    private static final String TAG = UserInfoDbManager.class.getSimpleName();
 
     private volatile static UserInfoDbManager mInstance;
     private UserInfoDbHelper mDbHelper;
@@ -46,35 +49,59 @@ public class UserInfoDbManager {
     }
 
     public long insertUserInfo(UserInfoDbModel model){
-        ContentValues values = new ContentValues();
-        values.put(UserInfoDbHelper.USER_INFO_COLUMN_LOGIN, model.getLogin());
-        values.put(UserInfoDbHelper.USER_INFO_COLUMN_AVATARURL, model.getAvatarUrl());
-        values.put(UserInfoDbHelper.USER_INFO_COLUMN_FOLLOWERS, model.getFollowers());
-        values.put(UserInfoDbHelper.USER_INFO_COLUMN_FOLLOWING, model.getFollowing());
-        return mDb.insert(UserInfoDbHelper.USER_INFO_TABLE_NAME, null, values);
+        long ret = -1;
+        try {
+            ContentValues values = new ContentValues();
+            values.put(UserInfoDbHelper.USER_INFO_COLUMN_LOGIN, model.getLogin());
+            values.put(UserInfoDbHelper.USER_INFO_COLUMN_AVATARURL, model.getAvatarUrl());
+            values.put(UserInfoDbHelper.USER_INFO_COLUMN_FOLLOWERS, model.getFollowers());
+            values.put(UserInfoDbHelper.USER_INFO_COLUMN_FOLLOWING, model.getFollowing());
+            ret = mDb.insert(UserInfoDbHelper.USER_INFO_TABLE_NAME, null, values);
+        }catch (Exception e){
+            Log.e(TAG, "insertUserInfo exception: " + e.getMessage());
+        }
+        return ret;
     }
 
     public long insertUserFollowInfo(UserFollowInfoDbModel model){
-        ContentValues values = new ContentValues();
-        values.put(UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_LOGIN, model.getLogin());
-        values.put(UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_FOLLOWERS, model.getFollowers());
-        values.put(UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_FOLLOWING, model.getFollowing());
-        return mDb.insert(UserInfoDbHelper.USER_FOLLOW_INFO_TABLE_NAME, null, values);
+        long ret = -1;
+        try {
+            ContentValues values = new ContentValues();
+            values.put(UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_LOGIN, model.getLogin());
+            values.put(UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_FOLLOWERS, model.getFollowers());
+            values.put(UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_FOLLOWING, model.getFollowing());
+            ret = mDb.insert(UserInfoDbHelper.USER_FOLLOW_INFO_TABLE_NAME, null, values);
+        }catch (Exception e){
+            Log.e(TAG, "insertUserFollowInfo exception: " + e.getMessage());
+        }
+        return ret;
     }
 
     public long updateUserInfo(UserInfoDbModel model){
-        ContentValues values = new ContentValues();
-        values.put(UserInfoDbHelper.USER_INFO_COLUMN_AVATARURL, model.getAvatarUrl());
-        values.put(UserInfoDbHelper.USER_INFO_COLUMN_FOLLOWERS, model.getFollowers());
-        values.put(UserInfoDbHelper.USER_INFO_COLUMN_FOLLOWING, model.getFollowing());
-        return mDb.update(UserInfoDbHelper.USER_INFO_TABLE_NAME, values, UserInfoDbHelper.USER_INFO_COLUMN_LOGIN + " = ? ", new String[]{model.getLogin()});
+        long ret = -1;
+        try {
+            ContentValues values = new ContentValues();
+            values.put(UserInfoDbHelper.USER_INFO_COLUMN_AVATARURL, model.getAvatarUrl());
+            values.put(UserInfoDbHelper.USER_INFO_COLUMN_FOLLOWERS, model.getFollowers());
+            values.put(UserInfoDbHelper.USER_INFO_COLUMN_FOLLOWING, model.getFollowing());
+            ret = mDb.update(UserInfoDbHelper.USER_INFO_TABLE_NAME, values, UserInfoDbHelper.USER_INFO_COLUMN_LOGIN + " = ? ", new String[]{model.getLogin()});
+        }catch (Exception e){
+            Log.e(TAG, "updateUserInfo exception: " + e.getMessage());
+        }
+        return ret;
     }
 
     public long updateUserFollowInfo(UserFollowInfoDbModel model){
-        ContentValues values = new ContentValues();
-        values.put(UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_FOLLOWERS, model.getFollowers());
-        values.put(UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_FOLLOWING, model.getFollowing());
-        return mDb.update(UserInfoDbHelper.USER_FOLLOW_INFO_TABLE_NAME, values, UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_LOGIN + " = ? ", new String[]{model.getLogin()});
+        long ret = -1;
+        try {
+            ContentValues values = new ContentValues();
+            values.put(UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_FOLLOWERS, model.getFollowers());
+            values.put(UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_FOLLOWING, model.getFollowing());
+            ret = mDb.update(UserInfoDbHelper.USER_FOLLOW_INFO_TABLE_NAME, values, UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_LOGIN + " = ? ", new String[]{model.getLogin()});
+        }catch (Exception e){
+            Log.e(TAG, "updateUserFollowInfo exception: " + e.getMessage());
+        }
+        return ret;
     }
 
     public UserFollowInfoDbModel queryUserFollowInfoByLogin(String login){
@@ -94,6 +121,7 @@ public class UserInfoDbManager {
                 return model;
             }
         }catch (Exception e){
+            Log.e(TAG, "UserFollowInfoDbModel exception: " + e.getMessage());
         }finally {
             if(cursor != null){
                 cursor.close();
@@ -172,6 +200,56 @@ public class UserInfoDbManager {
             }
         }).subscribeOn(Schedulers.io());
     }
+
+
+    public Observable<List<UserFollowInfo>> queryUserFollowInfoByLogin(String login, boolean isFollowers, int page, int perPage){
+        if(TextUtils.isEmpty(login)){
+            return null;
+        }
+        return Observable.create(new ObservableOnSubscribe<List<UserFollowInfo>>() {
+            @Override
+            public void subscribe(@NotNull ObservableEmitter<List<UserFollowInfo>> emitter) throws Exception {
+                Cursor cursor = null;
+                String limit = ((page - 1) * perPage) + "," + perPage;
+                cursor = mDb.query(UserInfoDbHelper.USER_FOLLOW_INFO_TABLE_NAME, null, UserInfoDbHelper.USER_FOLLOW_INFO_COLUMN_LOGIN + " = ?", new String[]{login}, null, null, null, limit);
+                if(cursor != null && cursor.moveToFirst()){
+                    String followers = cursor.getString(cursor.getColumnIndex(UserInfoDbHelper.USER_INFO_COLUMN_FOLLOWERS));
+                    String following = cursor.getString(cursor.getColumnIndex(UserInfoDbHelper.USER_INFO_COLUMN_FOLLOWING));
+                    List<UserFollowInfo> userFollowInfoList = new ArrayList<>();
+                    Gson gson = new Gson();
+                    if(isFollowers){
+                        if(!TextUtils.isEmpty(followers)){
+                            String[] followersArr = followers.split("、");
+                            for(String follower : followersArr){
+                                UserFollowPersonInfo personInfo = gson.fromJson(follower, UserFollowPersonInfo.class);
+                                UserFollowInfo userFollowInfo = new UserFollowInfo();
+                                userFollowInfo.setAvatar_url(personInfo.getAvatarUrl());
+                                userFollowInfo.setLogin(personInfo.getLogin());
+                                userFollowInfoList.add(userFollowInfo);
+                            }
+                            emitter.onNext(userFollowInfoList);
+                        }
+                    }else{
+                        if(!TextUtils.isEmpty(following)){
+                            String[] followeingArr = following.split("、");
+                            for(String follower : followeingArr){
+                                UserFollowPersonInfo personInfo = gson.fromJson(follower, UserFollowPersonInfo.class);
+                                UserFollowInfo userFollowInfo = new UserFollowInfo();
+                                userFollowInfo.setAvatar_url(personInfo.getAvatarUrl());
+                                userFollowInfo.setLogin(personInfo.getLogin());
+                                userFollowInfoList.add(userFollowInfo);
+                            }
+                            emitter.onNext(userFollowInfoList);
+                        }
+                    }
+                    emitter.onComplete();
+                    cursor.close();
+                }
+                emitter.onComplete();
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
 
 
 }

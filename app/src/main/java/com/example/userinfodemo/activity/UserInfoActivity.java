@@ -91,6 +91,9 @@ public class UserInfoActivity extends BaseActivity<UserInfoPresenter> implements
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        if(mUserInfo == null){
+            return;
+        }
         if(id == R.id.tv_followers){
             UserFollowListActivity.start(this, mUserInfo.getLogin(), true);
         }else if(id == R.id.tv_followeing){
