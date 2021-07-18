@@ -80,6 +80,6 @@ public class UserFollowListActivity extends BaseActivity<UserFollowListPresenter
     @Override
     public void updateData(List<UserFollowInfo> list) {
         mList.addAll(list);
-        mAdapter.updateDataAndRefresh(mList);
+        mAdapter.notifyDataSetChanged();
     }
 }

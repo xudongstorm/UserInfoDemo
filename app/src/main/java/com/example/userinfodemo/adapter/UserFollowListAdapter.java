@@ -57,7 +57,8 @@ public class UserFollowListAdapter extends RecyclerView.Adapter<UserFollowListAd
     @Override
     public void onBindViewHolder(@NonNull @NotNull BaseViewHolder holder, int position) {
         if(holder instanceof UserFollowListViewHolder){
-            ((UserFollowListViewHolder) holder).setData(mData.get(position));
+            UserFollowListViewHolder userFollowListViewHolder = (UserFollowListViewHolder) holder;
+            userFollowListViewHolder.setData(mData.get(position));
         }
     }
 
